@@ -20,7 +20,6 @@
     },
     async created () {
       const result = await getSingerList()
-      console.log(result)
       this.singers = result.singers
     }
   }
