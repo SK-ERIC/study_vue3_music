@@ -32,9 +32,9 @@
     </div>
     <scroll
       class="list"
+      :style="scrollStyle"
       v-loading="loading"
       v-no-result:[noResultText]="noResult"
-      :style="scrollStyle"
       :probe-type="3"
       @scroll="onScroll"
     >
@@ -42,6 +42,7 @@
         <song-list
           :songs="songs"
           @select="selectItem"
+          :rank="rank"
         ></song-list>
       </div>
     </scroll>
@@ -50,7 +51,7 @@
 
 <script>
   import SongList from '@/components/base/song-list/song-list'
-  import Scroll from '@/components/base/scroll/scroll'
+  import Scroll from '@/components/wrap-scroll'
   import { mapActions, mapState } from 'vuex'
 
   const RESERVED_HEIGHT = 40
@@ -64,7 +65,7 @@
     props: {
       songs: {
         type: Array,
-        default () {
+        default() {
           return []
         }
       },
@@ -85,9 +86,6 @@
       }
     },
     computed: {
-      ...mapState([
-        'playlist'
-      ]),
       noResult() {
         return !this.loading && !this.songs.length
       },
@@ -106,7 +104,6 @@
         let paddingTop = '70%'
         let height = 0
         let translateZ = 0
-        let scale = 1
 
         if (scrollY > this.maxTranslateY) {
           zIndex = 10
@@ -115,16 +112,17 @@
           translateZ = 1
         }
 
+        let scale = 1
         if (scrollY < 0) {
           scale = 1 + Math.abs(scrollY / this.imageHeight)
         }
 
         return {
           zIndex,
-          height,
           paddingTop,
+          height,
           backgroundImage: `url(${this.pic})`,
-          transform: `scale(${scale}) translateZ(${translateZ}px)`
+          transform: `scale(${scale})translateZ(${translateZ}px)`
         }
       },
       scrollStyle() {
@@ -144,17 +142,16 @@
         return {
           backdropFilter: `blur(${blur}px)`
         }
-      }
+      },
+      ...mapState([
+        'playlist'
+      ])
     },
-    mounted () {
+    mounted() {
       this.imageHeight = this.$refs.bgImage.clientHeight
       this.maxTranslateY = this.imageHeight - RESERVED_HEIGHT
     },
     methods: {
-      ...mapActions([
-        'selectPlay',
-        'randomPlay'
-      ]),
       goBack() {
         this.$router.back()
       },
@@ -169,7 +166,11 @@
       },
       random() {
         this.randomPlay(this.songs)
-      }
+      },
+      ...mapActions([
+        'selectPlay',
+        'randomPlay'
+      ])
     }
   }
 </script>
@@ -178,14 +179,12 @@
   .music-list {
     position: relative;
     height: 100%;
-
     .back {
       position: absolute;
       top: 0;
       left: 6px;
       z-index: 20;
       transform: translateZ(2px);
-
       .icon-back {
         display: block;
         padding: 10px;
@@ -193,7 +192,6 @@
         color: $color-theme;
       }
     }
-
     .title {
       position: absolute;
       top: 0;
@@ -207,19 +205,16 @@
       font-size: $font-size-large;
       color: $color-text;
     }
-
     .bg-image {
       position: relative;
       width: 100%;
       transform-origin: top;
       background-size: cover;
-
       .play-btn-wrapper {
         position: absolute;
         bottom: 20px;
         z-index: 10;
         width: 100%;
-
         .play-btn {
           box-sizing: border-box;
           width: 135px;
@@ -231,21 +226,18 @@
           border-radius: 100px;
           font-size: 0;
         }
-
         .icon-play {
           display: inline-block;
           vertical-align: middle;
           margin-right: 6px;
           font-size: $font-size-medium-x;
         }
-
         .text {
           display: inline-block;
           vertical-align: middle;
           font-size: $font-size-small;
         }
       }
-
       .filter {
         position: absolute;
         top: 0;
@@ -255,13 +247,11 @@
         background: rgba(7, 17, 27, 0.4);
       }
     }
-
     .list {
       position: absolute;
       bottom: 0;
       width: 100%;
       z-index: 0;
-
       .song-list-wrapper {
         padding: 20px 30px;
         background: $color-background;
