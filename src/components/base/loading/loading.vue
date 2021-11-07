@@ -10,13 +10,13 @@
 <script>
   export default {
     name: 'loading',
-    data () {
+    data() {
       return {
         title: '正在载入...'
       }
     },
     methods: {
-      setTitle (title) {
+      setTitle(title) {
         this.title = title
       }
     }
@@ -29,10 +29,8 @@
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
-
     .loading-content {
       text-align: center;
-
       .desc {
         line-height: 20px;
         font-size: $font-size-small;

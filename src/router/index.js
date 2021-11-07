@@ -31,6 +31,10 @@ const routes = [
   {
     path: '/search',
     component: Search
+  },
+  {
+    path: '/user',
+    components: {}
   }
 ]
 

@@ -1,6 +1,6 @@
 import { get } from './base'
 
-export function getSingerList () {
+export function getSingerList() {
   return get('/api/getSingerList')
 }
 
