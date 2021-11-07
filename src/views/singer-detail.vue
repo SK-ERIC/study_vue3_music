@@ -1,20 +1,43 @@
 <template>
   <div class="singer-detail">
-    <music-list
-      :songs="songs"
-      :title="title"
-      :pic="pic"
-      :loading="loading"
-    ></music-list>
+    <music-list :songs="songs" :title="title" :pic="pic" :loading="loading"></music-list>
   </div>
 </template>
 
 <script>
-  import createDetailComponent from '@/assets/js/create-detail-component'
   import { getSingerDetail } from '@/service/singer'
-  import { SINGER_KEY } from '@/assets/js/constant'
+  import { processSongs } from '@/service/song'
+  import MusicList from '@/components/music-list/music-list'
 
-  export default createDetailComponent('singer-detail', SINGER_KEY, getSingerDetail)
+  export default {
+    name: 'singer-detail',
+    components: {
+      MusicList
+    },
+    props: {
+      singer: Object
+    },
+    data () {
+      return {
+        songs: [],
+        loading: true
+      }
+    },
+    computed: {
+      pic () {
+        return this.singer && this.singer.pic
+      },
+      title () {
+        return this.singer && this.singer.name
+      }
+    },
+    async created () {
+      const result = await getSingerDetail(this.singer)
+      this.songs = await processSongs(result.songs)
+      this.loading = false
+    }
+  }
+
 </script>
 
 <style lang="scss" scoped>
